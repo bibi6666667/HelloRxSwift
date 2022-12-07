@@ -3,19 +3,22 @@ import RxSwift
 
 let disposeBag = DisposeBag()
 
-Observable.of("A", "B", "C")
-    .subscribe{
-        print($0)
-    }.disposed(by: disposeBag)
 
+let subject = ReplaySubject<String>.create(bufferSize: 2)
 
-Observable<String>.create { observer in
-    observer.onNext("A")
-    observer.onCompleted()
-    observer.onNext("?")
-    return Disposables.create()
-}.subscribe(onNext: { print($0) },
-            onError: { print($0) },
-            onCompleted: { print("Completed") },
-            onDisposed: { print("Disposed")})
-.disposed(by: disposeBag)
+subject.onNext("Issue 1")
+subject.onNext("Issue 2")
+subject.onNext("Issue 3")
+
+subject.subscribe {
+    print($0)
+}
+
+subject.onNext("Issue 4")
+subject.onNext("Issue 5")
+subject.onNext("Issue 6")
+
+print("[Subscription 2]")
+subject.subscribe {
+    print($0)
+}
