@@ -1,15 +1,18 @@
 import UIKit
 import RxSwift
+import RxCocoa
 
 let disposeBag = DisposeBag()
 
-let variable = Variable([String]())
+let relay = BehaviorRelay(value: ["Item 1"])
 
-variable.value.append("Item 1")
+var value = relay.value // 타입 : [String]
+value.append("Item 2")
+value.append("Item 3")
 
-variable.asObservable()// Variable을 Observable로 변환해 구독할 수 있다.
-    .subscribe {
-        print($0)
+relay.accept(value)
+
+relay.asObservable()
+    .subscribe { event in
+        print(event)
     }
-
-variable.value.append("Item 2")
