@@ -14,7 +14,7 @@ let mary = Student(score: BehaviorRelay(value: 95))
 let student = PublishSubject<Student>()
 
 student.asObservable()
-    .flatMap { $0.score.asObservable() }
+    .flatMapLatest { $0.score.asObservable() }
     .subscribe(onNext: {
         print($0)
     }).disposed(by: disposeBag)
@@ -23,6 +23,4 @@ student.onNext(john) // 75
 john.score.accept(100) // 100
 
 student.onNext(mary) // 95
-mary.score.accept(80) // 80
-
-john.score.accept(43) // 43
+john.score.accept(43) // 이 값의 변화는 무시됨
