@@ -4,23 +4,14 @@ import RxCocoa
 
 let disposeBag = DisposeBag()
 
-struct Student {
-    var score: BehaviorRelay<Int>
-}
+let numbers = Observable.of(2, 4, 3)
 
-let john = Student(score: BehaviorRelay(value: 75))
-let mary = Student(score: BehaviorRelay(value: 95))
-
-let student = PublishSubject<Student>()
-
-student.asObservable()
-    .flatMapLatest { $0.score.asObservable() }
+numbers.startWith(1)
     .subscribe(onNext: {
         print($0)
     }).disposed(by: disposeBag)
 
-student.onNext(john) // 75
-john.score.accept(100) // 100
-
-student.onNext(mary) // 95
-john.score.accept(43) // 이 값의 변화는 무시됨
+// 1
+// 2
+// 4
+// 3
