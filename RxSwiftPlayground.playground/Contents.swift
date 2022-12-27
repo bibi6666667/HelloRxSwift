@@ -3,17 +3,19 @@ import RxSwift
 
 let disposeBag = DisposeBag()
 
-let first = Observable.of(1, 2, 3)
-let second = Observable.of(4, 5, 6)
+let left = PublishSubject<Int>()
+let right = PublishSubject<Int>()
 
-let observable = Observable.concat([first, second])
+let source = Observable.of(left.asObservable(), right.asObservable())
+let observable = source.merge()
 observable.subscribe(onNext: {
     print($0)
 }).disposed(by: disposeBag)
 
-// 1
-// 2
-// 3
-// 4
-// 5
-// 6
+left.onNext(20)
+left.onNext(40)
+left.onNext(60)
+right.onNext(1)
+left.onNext(80)
+left.onNext(100)
+right.onNext(1)
