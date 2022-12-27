@@ -4,18 +4,28 @@ import RxSwift
 let disposeBag = DisposeBag()
 
 let left = PublishSubject<Int>()
-let right = PublishSubject<Int>()
+let middle = PublishSubject<Int>()
+let right = PublishSubject<String>()
 
-let source = Observable.of(left.asObservable(), right.asObservable())
-let observable = source.merge()
-observable.subscribe(onNext: {
-    print($0)
+let observable = Observable.combineLatest(left, middle, right, resultSelector: {
+    lastLeft, lastMiddle, lastRight in
+    return "\(lastLeft) \(lastMiddle) \(lastRight)"
+})
+
+observable.subscribe(onNext: { result in
+    print(result)
 }).disposed(by: disposeBag)
 
-left.onNext(20)
-left.onNext(40)
-left.onNext(60)
-right.onNext(1)
-left.onNext(80)
-left.onNext(100)
-right.onNext(1)
+left.onNext(1)
+middle.onNext(10)
+right.onNext("A")
+left.onNext(2)
+middle.onNext(9)
+right.onNext("B")
+left.onNext(3)
+middle.onNext(8)
+right.onNext("C")
+left.onNext(4)
+middle.onNext(7)
+right.onNext("D")
+left.onNext(5)
