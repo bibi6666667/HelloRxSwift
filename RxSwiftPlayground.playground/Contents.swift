@@ -1,17 +1,19 @@
 import UIKit
 import RxSwift
-import RxCocoa
 
 let disposeBag = DisposeBag()
 
-let numbers = Observable.of(2, 4, 3)
+let first = Observable.of(1, 2, 3)
+let second = Observable.of(4, 5, 6)
 
-numbers.startWith(1)
-    .subscribe(onNext: {
-        print($0)
-    }).disposed(by: disposeBag)
+let observable = Observable.concat([first, second])
+observable.subscribe(onNext: {
+    print($0)
+}).disposed(by: disposeBag)
 
 // 1
 // 2
-// 4
 // 3
+// 4
+// 5
+// 6
